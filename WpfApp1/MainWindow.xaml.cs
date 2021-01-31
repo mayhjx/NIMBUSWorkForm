@@ -39,8 +39,8 @@ namespace WpfApp1
         {
             var stack = new StackPanel();
             stack.Children.Add(Header());
-            stack.Children.Add(InfoHeader());
-            stack.Children.Add(Body());
+            stack.Children.Add(InfoHeader(1));
+            stack.Children.Add(Body(null));
             stack.Children.Add(Footer());
             return stack;
         }
@@ -57,8 +57,9 @@ namespace WpfApp1
             dialog.PrintVisual(PrintArea.Children[0], "print test");
         }
 
-        private Grid Body()
+        private Grid Body(Dictionary<string, string> dic = null)
         {
+            // TODO
             const int rowNum = 8;
             const int colNum = 12;
 
