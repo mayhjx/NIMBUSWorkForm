@@ -8,7 +8,7 @@
         Title="MainWindow" Height="650" Width="1200">
     <Border Margin="10">
         <StackPanel>
-            <ScrollViewer MaxHeight="520" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer MaxHeight="525" HorizontalScrollBarVisibility="Auto">
                 <StackPanel x:Name="PrintArea">
                     
                 </StackPanel>
