@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NIMBUSWorkForm" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="QC1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QC1</Value>
+    </Setting>
+    <Setting Name="QC2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QC2</Value>
+    </Setting>
+    <Setting Name="QC3" Type="System.String" Scope="User">
+      <Value Profile="(Default)">QC3</Value>
+    </Setting>
+    <Setting Name="ShowBarCode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
