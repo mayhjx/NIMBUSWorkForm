@@ -30,7 +30,7 @@ namespace WpfApp1
         private const double ColumnTitleHeight = 6d * 3.7795275591; // 96孔板列标题行高(mm2px)
         private const double RowTitleWidth = 6d * 3.7795275591; // 96孔板行标题列宽(mm2px)
         private const double CellRowHeight = 22d * 3.7795275591; // 96孔板单元格行高(mm2px)
-        private const double CellColWidth = 23d * 3.7795275591;  // 96孔板单元格列宽(mm2px)
+        private const double CellColWidth = 24d * 3.7795275591;  // 96孔板单元格列宽(mm2px)
         private const double RowHeight = 7d * 3.7795275591; // 工作清单header和footer行高(mm2px)
 
         private List<Sample> Samples;
