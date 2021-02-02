@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="NIMBUS移液平台工作清单生成" Height="550" Width="1200" WindowStartupLocation="Manual">
+        Title="NIMBUS移液平台工作清单生成" Height="550" Width="1200" WindowStartupLocation="Manual" SizeToContent="WidthAndHeight">
     <StackPanel Margin="10">
         <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
             <Label>移液操作清单：</Label>

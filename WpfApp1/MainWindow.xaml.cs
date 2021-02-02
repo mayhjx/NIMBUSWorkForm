@@ -1,5 +1,5 @@
 ﻿using Microsoft.Win32;
-using NPOI.HSSF.UserModel;
+using NIMBUSWorkForm;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -7,17 +7,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfApp1
 {
@@ -33,13 +26,15 @@ namespace WpfApp1
         private const double CellColWidth = 24d * 3.7795275591;  // 96孔板单元格列宽(mm2px)
         private const double RowHeight = 7d * 3.7795275591; // 工作清单header和footer行高(mm2px)
 
-        private List<Sample> Samples;
-        private List<string> Plates;
+        private SampleTable SampleTable;
 
         public MainWindow()
         {
             InitializeComponent();
-            this.SizeToContent = SizeToContent.WidthAndHeight;
+            this.MinWidth = RowTitleWidth + CellColWidth * 12 + 50;
+            this.MinHeight = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
+            DocumentPage.Width = RowTitleWidth + CellColWidth * 12 + 50;
+            DocumentPage.Height = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
@@ -71,24 +66,23 @@ namespace WpfApp1
             FileName1.Text = openFileDialog1.SafeFileName;
 
             // 用户再次点击上传文件时清空之前的数据
-            Samples = new List<Sample>();
-            Plates = new List<string>();
+            SampleTable = new SampleTable();
             DocumentPage.Document = null;
 
             try
             {
                 // 读取数据
-                Samples = ReadNIMBUSWorkBook(openFileDialog.FileName);
-                Samples = ReadOperateWorkBook(Samples, openFileDialog1.FileName);
+                SampleTable = ReadUploadedExcel.ReadNIMBUSWorkBook(openFileDialog.FileName);
+                SampleTable = ReadUploadedExcel.ReadOperateWorkBook(SampleTable, openFileDialog1.FileName);
 
                 // 生成96孔板工作清单
                 var flowDocument = new FlowDocument()
                 {
                     ColumnWidth = RowTitleWidth + CellColWidth * 12 + 50,
                 };
-                foreach (var plate in Plates)
+                foreach (var plate in SampleTable.PlateNumber)
                 {
-                    flowDocument.Blocks.Add(new BlockUIContainer(Create96PlateForm(plate)) { });
+                    flowDocument.Blocks.Add(new BlockUIContainer(Create96PlateForm(plate)));
                 }
                 DocumentPage.Document = flowDocument;
             }
@@ -104,11 +98,6 @@ namespace WpfApp1
 
             PrintButton.IsEnabled = true;
             OutputButton.IsEnabled = true;
-
-            this.MinWidth = RowTitleWidth + CellColWidth * 12;
-            this.MinHeight = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3;
-            DocumentPage.Width = RowTitleWidth + CellColWidth * 12 + 50;
-            DocumentPage.Height = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
         }
 
         private void PrintButton_Click(object sender, RoutedEventArgs e)
@@ -131,210 +120,51 @@ namespace WpfApp1
             if (saveFileDialog.ShowDialog().GetValueOrDefault() == true)
             {
                 string filePath = saveFileDialog.FileName;
-                CreateBatchListAndWarmInfoWorkBook(filePath);
+                //CreateBatchListAndWarmInfoWorkBook(filePath);
             }
         }
 
-        private void CreateBatchListAndWarmInfoWorkBook(string filePath)
-        {
-            IWorkbook workbook = new XSSFWorkbook();
-            ISheet sheet;
-            int rowIndex = 0;
+        //private void CreateBatchListAndWarmInfoWorkBook(string filePath)
+        //{
+        //    IWorkbook workbook = new XSSFWorkbook();
+        //    ISheet sheet;
+        //    int rowIndex = 0;
 
-            // 插入上机列表
-            foreach (var plate in Plates)
-            {
-                sheet = workbook.CreateSheet(plate);
+        //    // 插入上机列表
+        //    foreach (var plate in Plates)
+        //    {
+        //        sheet = workbook.CreateSheet(plate);
 
-            }
+        //    }
 
-            // 插入警告信息
-            sheet = workbook.CreateSheet("警告信息");
-            rowIndex = 0;
-            var row = sheet.CreateRow(rowIndex++);
-            row.CreateCell(0).SetCellValue("实验号");
-            row.CreateCell(1).SetCellValue("板号");
-            row.CreateCell(2).SetCellValue("孔位");
-            row.CreateCell(3).SetCellValue("条码");
-            row.CreateCell(4).SetCellValue("警告信息");
+        //    // 插入警告信息
+        //    sheet = workbook.CreateSheet("警告信息");
+        //    rowIndex = 0;
+        //    var row = sheet.CreateRow(rowIndex++);
+        //    row.CreateCell(0).SetCellValue("实验号");
+        //    row.CreateCell(1).SetCellValue("板号");
+        //    row.CreateCell(2).SetCellValue("孔位");
+        //    row.CreateCell(3).SetCellValue("条码");
+        //    row.CreateCell(4).SetCellValue("警告信息");
 
-            foreach (var sample in Samples)
-            {
-                if (sample.WarmInfo == "1" || sample.WarmInfo == "16384")
-                {
-                    row = sheet.CreateRow(rowIndex++);
-                    row.CreateCell(0).SetCellValue(sample.Number);
-                    row.CreateCell(1).SetCellValue(sample.Plate);
-                    row.CreateCell(2).SetCellValue(sample.Position);
-                    row.CreateCell(3).SetCellValue(sample.BarCode);
-                    row.CreateCell(4).SetCellValue(sample.WarmInfo);
-                }
-            }
+        //    foreach (var sample in SampleTable)
+        //    {
+        //        if (sample.WarmInfo == "1" || sample.WarmInfo == "16384")
+        //        {
+        //            row = sheet.CreateRow(rowIndex++);
+        //            row.CreateCell(0).SetCellValue(sample.Number);
+        //            row.CreateCell(1).SetCellValue(sample.Plate);
+        //            row.CreateCell(2).SetCellValue(sample.Position);
+        //            row.CreateCell(3).SetCellValue(sample.BarCode);
+        //            row.CreateCell(4).SetCellValue(sample.WarmInfo);
+        //        }
+        //    }
 
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-                workbook.Write(fileStream);
-            }
-        }
-
-        private List<Sample> ReadNIMBUSWorkBook(string filePath)
-        {
-            // 读取NIMBUS工作清单中的板号，孔号，条码和警告信息
-            var samples = new List<Sample>();
-            try
-            {
-                IWorkbook workbook = ReadExecl(filePath);
-                if (workbook == null)
-                {
-                    throw new IOException($"无法打开{filePath}");
-                }
-
-                ISheet worksheet = workbook.GetSheetAt(0);
-
-                int idCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "TPositionId").ColumnIndex;
-                int bcCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "SPositionBC").ColumnIndex;
-                int warmCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "Warm").ColumnIndex;
-
-                // 获取板号，最多四块板
-                for (int i = 1; i <= worksheet.LastRowNum; i++)
-                {
-                    var row = worksheet.GetRow(i);
-                    var warm = row.GetCell(warmCol).ToString();
-                    if (warm.StartsWith('X'))
-                    {
-                        Plates.Add(warm);
-                    }
-                }
-
-                if (Plates.Count == 0)
-                {
-                    throw new ArgumentException("未识别到板号");
-                }
-
-                int p = -1;
-                for (int i = 1; i <= worksheet.LastRowNum; i++)
-                {
-                    var row = worksheet.GetRow(i);
-                    if (row.Cells.Count == 0) { continue; }
-
-                    string bc = row.GetCell(bcCol).ToString();
-                    string pos = row.GetCell(idCol).ToString();
-                    string warm = row.GetCell(warmCol).ToString();
-
-                    if (pos == "A1")
-                    {
-                        p++;
-                    }
-                    string plate = Plates[p];
-
-                    var sample = new Sample(null, bc, plate, pos, warm);
-                    samples.Add(sample);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"读取{System.IO.Path.GetFileName(filePath)}文件时发生错误：{ex.Message}");
-                throw;
-            }
-
-            return samples;
-        }
-
-        private List<Sample> ReadOperateWorkBook(List<Sample> samples, string filePath)
-        {
-            // 读取每日操作清单，补充实验号到samples中
-            try
-            {
-                IWorkbook workbook = ReadExecl(filePath);
-                if (workbook == null)
-                {
-                    throw new IOException($"无法打开{filePath}");
-                }
-
-                ISheet worksheet = workbook.GetSheetAt(0);
-
-                int bcCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "主条码").ColumnIndex;
-                int numCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "实验号").ColumnIndex;
-
-                for (int i = 1; i <= worksheet.LastRowNum; i++)
-                {
-                    var row = worksheet.GetRow(i);
-                    if (row.Cells.Count == 0) { continue; }
-                    string barCode = row.GetCell(bcCol).ToString();
-                    string number = row.GetCell(numCol).ToString();
-
-                    // 每日操作清单中的条码不包含“-”
-                    var sample = samples.Find(i => i.BarCode.Split('-')[0] == barCode);
-                    if (sample != null)
-                    {
-                        sample.Number = number;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"读取{System.IO.Path.GetFileName(filePath)}文件时发生错误：{ex.Message}");
-                throw;
-            }
-            return samples;
-        }
-
-        private IWorkbook ReadExecl(string filePath)
-        {
-            IWorkbook workbook = null;
-            try
-            {
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                {
-                    try
-                    {
-                        workbook = new HSSFWorkbook(fileStream);
-                    }
-                    catch
-                    {
-                        workbook = null;
-                    }
-                }
-                if (workbook == null)
-                {
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                    {
-                        workbook = new XSSFWorkbook(fileStream);
-                    }
-                }
-            }
-            catch
-            {
-            }
-            return workbook;
-        }
-
-        class Sample
-        {
-            private List<string> Rows = new List<string>{ "A", "B", "C", "D", "E", "F", "G", "H" };
-
-            public Sample(string number, string barCode, string plate, string position, string warmInfo)
-            {
-                Number = number;
-                if (barCode == "----------")
-                {
-                    barCode = "";
-                }
-                BarCode = barCode;
-                Plate = plate;
-                Position = position;
-                string rowIndex = Position[0].ToString();
-                int colIndex = int.Parse(Position.Substring(1));
-                Order = $"{Rows.IndexOf(rowIndex) * 12 + colIndex}";
-                WarmInfo = warmInfo;
-            }
-            public string Number { get; set; } //实验号
-            public string BarCode { get; set; } // 条形码
-            public string Plate { get; set; } // 板号
-            public string Position { get; set; } // 孔位（A1，A2...H12）
-            public string Order { get; set; } // 序号（1-96）
-            public string WarmInfo { get; set; } //警告信息
-        }
+        //    using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        //    {
+        //        workbook.Write(fileStream);
+        //    }
+        //}
 
         private StackPanel Create96PlateForm(string plate)
         {
@@ -477,7 +307,7 @@ namespace WpfApp1
         /// <param name="plate"></param>
         private void AddNumber(Grid grid, string plate)
         {
-            if (Samples.Count == 0)
+            if (SampleTable.Samples.Count == 0)
             {
                 return;
             }
@@ -489,7 +319,7 @@ namespace WpfApp1
                 for (int col = 1; col < 13; col++)
                 {
                     string position = $"{Rows[row]}{col}";
-                    var sample = Samples.FirstOrDefault(i => i.Plate == plate && i.Position == position);
+                    var sample = SampleTable.Samples.FirstOrDefault(i => i.Plate == plate && i.Position == position);
 
                     if (sample != null)
                     {
