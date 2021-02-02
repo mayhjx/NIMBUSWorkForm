@@ -91,7 +91,7 @@ namespace WpfApp1
             }
             catch (IOException ex)
             {
-                MessageBox.Show($"读取Excel文件时发成错误：{ex.Message}");
+                MessageBox.Show($"读取Excel文件时出现错误：{ex.Message}");
                 return;
             }
             catch (Exception ex)
