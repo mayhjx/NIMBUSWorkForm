@@ -26,15 +26,15 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string CustomFontFamily = "Times New Roman";
-        private const double ColumnTitleHeight = 25d; // 96孔板列标题行高
-        private const double RowTitleWidth = 25d; // 96孔板行标题列宽
-        private const double CellRowHeight = 65d; // 96孔板单元格行高
-        private const double CellColWidth = 120d;  // 96孔板单元格列宽
-        private const double RowHeight = 30d; // 工作清单header和footer行高
+        private const string CustomFontFamily = "Times New Roman, 宋体";
+        private const double ColumnTitleHeight = 6d * 3.7795275591; // 96孔板列标题行高(mm2px)
+        private const double RowTitleWidth = 6d * 3.7795275591; // 96孔板行标题列宽(mm2px)
+        private const double CellRowHeight = 22d * 3.7795275591; // 96孔板单元格行高(mm2px)
+        private const double CellColWidth = 23d * 3.7795275591;  // 96孔板单元格列宽(mm2px)
+        private const double RowHeight = 7d * 3.7795275591; // 工作清单header和footer行高(mm2px)
 
-        private List<Sample> Samples = new List<Sample>();
-        private List<string> Plates = new List<string>();
+        private List<Sample> Samples;
+        private List<string> Plates;
 
         public MainWindow()
         {
@@ -105,6 +105,8 @@ namespace WpfApp1
             PrintButton.IsEnabled = true;
             OutputButton.IsEnabled = true;
 
+            this.MinWidth = RowTitleWidth + CellColWidth * 12;
+            this.MinHeight = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3;
             DocumentPage.Width = RowTitleWidth + CellColWidth * 12 + 50;
             DocumentPage.Height = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
         }
@@ -261,7 +263,8 @@ namespace WpfApp1
                     string barCode = row.GetCell(bcCol).ToString();
                     string number = row.GetCell(numCol).ToString();
 
-                    var sample = samples.Find(i => i.BarCode == barCode);
+                    // 每日操作清单中的条码不包含“-”
+                    var sample = samples.Find(i => i.BarCode.Split('-')[0] == barCode);
                     if (sample != null)
                     {
                         sample.Number = number;
@@ -503,8 +506,20 @@ namespace WpfApp1
                         }
                         else
                         {
-                            string text = $"{order}   {sample?.Number} \n{sample?.BarCode}";
-                            grid.Children.Add(CreateTextBlock(text, row, col));
+                            var txt = new TextBlock()
+                            {
+                                Margin = new Thickness(5),
+                                TextWrapping = TextWrapping.Wrap,
+                                FontSize = 16,
+                                FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
+                            };
+                            txt.Inlines.Add(new Run($"{order}\n") { FontSize = 12 });
+                            txt.Inlines.Add(new Run($"{sample?.Number}\n") { FontWeight = FontWeights.Bold });
+                            txt.Inlines.Add(new Run($"{sample?.BarCode}"));
+
+                            Grid.SetColumn(txt, col);
+                            Grid.SetRow(txt, row);
+                            grid.Children.Add(txt);
                         }
                     }
                 }
@@ -519,7 +534,7 @@ namespace WpfApp1
                 Margin = new Thickness(5),
                 TextWrapping = TextWrapping.Wrap,
                 FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
-                FontSize = 17d
+                FontSize = 14d
             };
             Grid.SetColumn(txt, column);
             Grid.SetRow(txt, row);
@@ -529,14 +544,14 @@ namespace WpfApp1
         private RowDefinition CreateRow(double height)
         {
             var row = new RowDefinition();
-            row.Height = new GridLength(height);
+            row.Height = new GridLength(height, GridUnitType.Pixel);
             return row;
         }
 
         private ColumnDefinition CreateColumn(double width)
         {
             var col = new ColumnDefinition();
-            col.Width = new GridLength(width);
+            col.Width = new GridLength(width, GridUnitType.Pixel);
             return col;
         }
 
