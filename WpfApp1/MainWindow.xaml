@@ -5,18 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="NIMBUS移液平台工作清单生成" Height="550" Width="1200" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
-    <StackPanel Margin="10">
-        <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
-            <Label>移液操作清单：</Label>
-            <TextBox x:Name="FileName" Width="250" Padding="5" IsReadOnly="True"></TextBox>
-            <Label Margin="10,0,0,0">每日操作清单：</Label>
-            <TextBox x:Name="FileName1" Width="250" Padding="5" IsReadOnly="True"></TextBox>
-            <Button x:Name="OpenFileButton"  Width="80" Height="30" Click="OpenFileButton_Click" Content="打开文件" Margin="10,0,10,0" />
-            <Button x:Name="PrintButton"  Width="150" Height="30" Click="PrintButton_Click" Content="打印96孔板工作清单" IsEnabled="False" Margin="0,0,10,0"/>
-            <Button x:Name="OutputButton"  Width="150" Height="30" Click="OutputButton_Click" Content="导出上机列表和警告信息" IsEnabled="False"/>
-        </StackPanel>
-        <FlowDocumentPageViewer x:Name="DocumentPage">
-        </FlowDocumentPageViewer>
-    </StackPanel>
+        Title="NIMBUS移液平台工作清单生成" Height="550" Width="1100" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="Setting" Header="设置" Click="Setting_Click" />
+            <MenuItem x:Name="Help" Header="说明" Click="Help_Click" />
+        </Menu>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="170" />
+                <ColumnDefinition Width="170" />
+                <ColumnDefinition Width="170" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">移液操作清单：</TextBlock>
+            <TextBox x:Name="FileName"  Grid.Row="0" Grid.Column="1" Width="200" Padding="5" IsReadOnly="True"></TextBox>
+            <TextBlock  Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">每日操作清单：</TextBlock>
+            <TextBox x:Name="FileName1" Grid.Row="0" Grid.Column="3" Width="200" Padding="5" IsReadOnly="True"></TextBox>
+            <Button x:Name="OpenFileButton" Grid.Row="0" Grid.Column="4" Width="150" Height="30" Click="OpenFileButton_Click" Content="打开文件"  />
+            <Button x:Name="PrintButton" Grid.Row="0" Grid.Column="5" Width="150" Height="30" Click="PrintButton_Click" Content="打印96孔板工作清单" IsEnabled="False"/>
+            <Button x:Name="OutputButton" Grid.Row="0" Grid.Column="6" Width="150" Height="30" Click="OutputButton_Click" Content="导出上机列表和警告信息" IsEnabled="False"/>
+            <FlowDocumentPageViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7" x:Name="DocumentPage">
+            </FlowDocumentPageViewer>
+        </Grid>
+        <Popup x:Name="SettingPopup" Height="500" Width="500" Placement="Center" AllowsTransparency="True">
+            <Grid>
+                <TextBlock>Setting</TextBlock>
+            </Grid>
+        </Popup>
+    </DockPanel>
 </Window>

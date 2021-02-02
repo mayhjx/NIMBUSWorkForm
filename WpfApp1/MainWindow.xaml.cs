@@ -374,5 +374,15 @@ namespace WpfApp1
             }
         }
         #endregion
+
+        private void Setting_Click(object sender, RoutedEventArgs e)
+        {
+            SettingPopup.IsOpen = true;
+        }
+
+        private void Help_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
