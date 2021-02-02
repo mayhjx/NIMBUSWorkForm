@@ -109,7 +109,7 @@ namespace NIMBUSWorkForm
                 {
                     // 插入临床样品
                     row = sh.CreateRow(rowIndex++);
-                    row.CreateCell(0).SetCellValue(sample.Number);
+                    row.CreateCell(0).SetCellValue(sample.BarCode);
                     row.CreateCell(1).SetCellValue("1");
                     row.CreateCell(2).SetCellValue(sample.Order);
                     clinicSampleCount++;
