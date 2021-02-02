@@ -311,6 +311,8 @@ namespace WpfApp1
 
         class Sample
         {
+            private List<string> Rows = new List<string>{ "A", "B", "C", "D", "E", "F", "G", "H" };
+
             public Sample(string number, string barCode, string plate, string position, string warmInfo)
             {
                 Number = number;
@@ -321,13 +323,17 @@ namespace WpfApp1
                 BarCode = barCode;
                 Plate = plate;
                 Position = position;
+                string rowIndex = Position[0].ToString();
+                int colIndex = int.Parse(Position.Substring(1));
+                Order = $"{Rows.IndexOf(rowIndex) * 12 + colIndex}";
                 WarmInfo = warmInfo;
             }
-            public string Number { get; set; }
-            public string BarCode { get; set; }
-            public string Plate { get; set; }
-            public string Position { get; set; }
-            public string WarmInfo { get; set; }
+            public string Number { get; set; } //实验号
+            public string BarCode { get; set; } // 条形码
+            public string Plate { get; set; } // 板号
+            public string Position { get; set; } // 孔位（A1，A2...H12）
+            public string Order { get; set; } // 序号（1-96）
+            public string WarmInfo { get; set; } //警告信息
         }
 
         private StackPanel Create96PlateForm(string plate)
@@ -483,8 +489,6 @@ namespace WpfApp1
                 for (int col = 1; col < 13; col++)
                 {
                     string position = $"{Rows[row]}{col}";
-                    string order = ((row - 1) * 12 + col).ToString();
-
                     var sample = Samples.FirstOrDefault(i => i.Plate == plate && i.Position == position);
 
                     if (sample != null)
@@ -513,7 +517,7 @@ namespace WpfApp1
                                 FontSize = 16,
                                 FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
                             };
-                            txt.Inlines.Add(new Run($"{order}\n") { FontSize = 12 });
+                            txt.Inlines.Add(new Run($"{sample?.Order}\n") { FontSize = 12 });
                             txt.Inlines.Add(new Run($"{sample?.Number}\n") { FontWeight = FontWeights.Bold });
                             txt.Inlines.Add(new Run($"{sample?.BarCode}"));
 
