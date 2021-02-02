@@ -91,12 +91,12 @@ namespace WpfApp1
             }
             catch (IOException ex)
             {
-                MessageBox.Show($"读取Excel文件时出现错误：{ex.Message}");
+                MessageBox.Show($"读取Excel文件时出现错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"生成96孔板工作清单时出现错误：{ex.Message}");
+                MessageBox.Show($"生成前处理工作清单时出现错误：{ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
         }
