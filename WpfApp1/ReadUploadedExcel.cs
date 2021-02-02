@@ -21,6 +21,25 @@ namespace NIMBUSWorkForm
             sampleTable.PlateNumber = plates;
             sampleTable.Samples = samples;
 
+            // 曲线质控位置
+            var STDQC = new Dictionary<string, string>
+            {
+                { "A1", "Blank" },
+                { "B1", "STD0"},
+                { "C1", "STD1"},
+                { "D1", "STD2"},
+                { "E1", "STD3"},
+                { "F1", "STD4"},
+                { "G1", "STD5"},
+                { "H1", "STD6"},
+                { "B2", "QC1"},
+                { "C2", "QC2"},
+                { "D2", "QC3"},
+                { "E2", "QC1"},
+                { "F2", "QC2"},
+                { "G2", "QC3"}
+            };
+
             try
             {
                 IWorkbook workbook = ReadExecl(filePath);
@@ -31,19 +50,20 @@ namespace NIMBUSWorkForm
 
                 ISheet worksheet = workbook.GetSheetAt(0);
 
-                int idCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "TPositionId").ColumnIndex;
+                int posCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "TPositionId").ColumnIndex;
                 int bcCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "SPositionBC").ColumnIndex;
-                int warmCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "Warm").ColumnIndex;
+                int warnInfoCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "TSumStateDescription").ColumnIndex;
+                int warnLevelCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "Warm").ColumnIndex;
                 // TODO can not find the column
 
-                // 获取板号，最多四块板
+                // 获取板号
                 for (int i = 1; i <= worksheet.LastRowNum; i++)
                 {
                     var row = worksheet.GetRow(i);
-                    var warm = row.GetCell(warmCol).ToString();
-                    if (warm.StartsWith('X'))
+                    var warnLevel = row.GetCell(warnLevelCol).ToString();
+                    if (warnLevel.StartsWith('X'))
                     {
-                        plates.Add(warm);
+                        plates.Add(warnLevel);
                     }
                 }
 
@@ -52,24 +72,32 @@ namespace NIMBUSWorkForm
                     throw new ArgumentException("未识别到板号");
                 }
 
-                int p = -1;
+                int p = -1; // 板号下标
                 for (int i = 1; i <= worksheet.LastRowNum; i++)
                 {
                     var row = worksheet.GetRow(i);
                     if (row.Cells.Count == 0) { continue; }
 
+                    string num = "";
                     string bc = row.GetCell(bcCol).ToString();
-                    string pos = row.GetCell(idCol).ToString();
-                    string warm = row.GetCell(warmCol).ToString();
+                    string pos = row.GetCell(posCol).ToString();
+                    string warnLevel = row.GetCell(warnLevelCol).ToString();
+                    string warnInfo = row.GetCell(warnInfoCol).ToString();
 
+                    if (bc == "----------")
+                    {
+                        bc = "";
+                    }
                     if (pos == "A1")
                     {
                         p++;
                     }
-                    string plate = plates[p];
+                    if (STDQC.ContainsKey(pos))
+                    {
+                        num = STDQC.GetValueOrDefault(pos);
+                    }
 
-                    var sample = new Sample(null, bc, plate, pos, warm);
-                    samples.Add(sample);
+                    samples.Add(new Sample(num, bc, plates[p], pos, warnLevel, warnInfo));
                 }
             }
             catch (Exception)

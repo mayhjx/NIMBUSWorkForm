@@ -82,12 +82,16 @@ namespace WpfApp1
                 };
                 foreach (var plate in SampleTable.PlateNumber)
                 {
-                    flowDocument.Blocks.Add(new BlockUIContainer(Create96PlateForm(plate)));
+                    flowDocument.Blocks.Add(new BlockUIContainer(Create96WellPlateForm(plate)));
                 }
                 DocumentPage.Document = flowDocument;
+
+                PrintButton.IsEnabled = true;
+                OutputButton.IsEnabled = true;
             }
-            catch (IOException)
+            catch (IOException ex)
             {
+                MessageBox.Show($"读取Excel文件时发成错误：{ex.Message}");
                 return;
             }
             catch (Exception ex)
@@ -95,9 +99,6 @@ namespace WpfApp1
                 MessageBox.Show($"生成96孔板工作清单时出现错误：{ex.Message}");
                 return;
             }
-
-            PrintButton.IsEnabled = true;
-            OutputButton.IsEnabled = true;
         }
 
         private void PrintButton_Click(object sender, RoutedEventArgs e)
@@ -120,63 +121,81 @@ namespace WpfApp1
             if (saveFileDialog.ShowDialog().GetValueOrDefault() == true)
             {
                 string filePath = saveFileDialog.FileName;
-                //CreateBatchListAndWarmInfoWorkBook(filePath);
+                BatchAndWarnFile.Create(SampleTable, filePath);
             }
         }
 
-        //private void CreateBatchListAndWarmInfoWorkBook(string filePath)
-        //{
-        //    IWorkbook workbook = new XSSFWorkbook();
-        //    ISheet sheet;
-        //    int rowIndex = 0;
-
-        //    // 插入上机列表
-        //    foreach (var plate in Plates)
-        //    {
-        //        sheet = workbook.CreateSheet(plate);
-
-        //    }
-
-        //    // 插入警告信息
-        //    sheet = workbook.CreateSheet("警告信息");
-        //    rowIndex = 0;
-        //    var row = sheet.CreateRow(rowIndex++);
-        //    row.CreateCell(0).SetCellValue("实验号");
-        //    row.CreateCell(1).SetCellValue("板号");
-        //    row.CreateCell(2).SetCellValue("孔位");
-        //    row.CreateCell(3).SetCellValue("条码");
-        //    row.CreateCell(4).SetCellValue("警告信息");
-
-        //    foreach (var sample in SampleTable)
-        //    {
-        //        if (sample.WarmInfo == "1" || sample.WarmInfo == "16384")
-        //        {
-        //            row = sheet.CreateRow(rowIndex++);
-        //            row.CreateCell(0).SetCellValue(sample.Number);
-        //            row.CreateCell(1).SetCellValue(sample.Plate);
-        //            row.CreateCell(2).SetCellValue(sample.Position);
-        //            row.CreateCell(3).SetCellValue(sample.BarCode);
-        //            row.CreateCell(4).SetCellValue(sample.WarmInfo);
-        //        }
-        //    }
-
-        //    using (FileStream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-        //    {
-        //        workbook.Write(fileStream);
-        //    }
-        //}
-
-        private StackPanel Create96PlateForm(string plate)
+        /// <summary>
+        /// 填充实验号和条码信息
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="plate"></param>
+        private void AddNumber(Grid grid, string plate)
         {
-            var stack = new StackPanel();
-            stack.Children.Add(Header());
-            stack.Children.Add(InfoHeader(plate));
-            stack.Children.Add(Body(plate));
-            stack.Children.Add(Footer());
-            return stack;
+            if (SampleTable.Samples.Count == 0)
+            {
+                return;
+            }
+
+            string[] Rows = { "", "A", "B", "C", "D", "E", "F", "G", "H" };
+
+            for (int row = 1; row < 9; row++)
+            {
+                for (int col = 1; col < 13; col++)
+                {
+                    string position = $"{Rows[row]}{col}";
+                    var sample = SampleTable.Samples.FirstOrDefault(i => i.Plate == plate && i.Position == position);
+
+                    if (sample != null)
+                    {
+                        if (sample.IsX())
+                        {
+                            // 定位孔
+                            var txt = new TextBlock()
+                            {
+                                Text = sample.Number,
+                                FontSize = 50,
+                                FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
+                                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                                VerticalAlignment = System.Windows.VerticalAlignment.Center
+                            };
+                            Grid.SetColumn(txt, col);
+                            Grid.SetRow(txt, row);
+                            grid.Children.Add(txt);
+                        }
+                        else
+                        {
+                            var txt = new TextBlock()
+                            {
+                                Margin = new Thickness(5),
+                                TextWrapping = TextWrapping.Wrap,
+                                FontSize = 16,
+                                FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
+                            };
+                            txt.Inlines.Add(new Run($"{sample?.Order}\n") { FontSize = 12 });
+                            txt.Inlines.Add(new Run($"{sample?.Number}\n") { FontWeight = FontWeights.Bold });
+                            txt.Inlines.Add(new Run($"{sample?.BarCode}"));
+
+                            Grid.SetColumn(txt, col);
+                            Grid.SetRow(txt, row);
+                            grid.Children.Add(txt);
+                        }
+                    }
+                }
+            }
         }
 
         #region 生成96孔板工作单结构
+        private StackPanel Create96WellPlateForm(string plate)
+        {
+            var form = new StackPanel();
+            form.Children.Add(Header());
+            form.Children.Add(InfoHeader(plate));
+            form.Children.Add(Body(plate));
+            form.Children.Add(Footer());
+            return form;
+        }
+
         private Grid Body(string plate)
         {
             const int rowNum = 8;
@@ -274,9 +293,7 @@ namespace WpfApp1
 
             return footer;
         }
-        #endregion
 
-        #region 生成96孔板行列标题
         private void AddColumnTitle(Grid grid)
         {
             for (int col = 1; col < 13; col++)
@@ -300,66 +317,7 @@ namespace WpfApp1
         }
         #endregion
 
-        /// <summary>
-        /// 填充实验号和条码信息
-        /// </summary>
-        /// <param name="grid"></param>
-        /// <param name="plate"></param>
-        private void AddNumber(Grid grid, string plate)
-        {
-            if (SampleTable.Samples.Count == 0)
-            {
-                return;
-            }
-
-            string[] Rows = { "", "A", "B", "C", "D", "E", "F", "G", "H" };
-
-            for (int row = 1; row < 9; row++)
-            {
-                for (int col = 1; col < 13; col++)
-                {
-                    string position = $"{Rows[row]}{col}";
-                    var sample = SampleTable.Samples.FirstOrDefault(i => i.Plate == plate && i.Position == position);
-
-                    if (sample != null)
-                    {
-                        if (sample.WarmInfo.StartsWith('X'))
-                        {
-                            // 定位孔
-                            var txt = new TextBlock()
-                            {
-                                Text = sample.WarmInfo,
-                                FontSize = 50,
-                                FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
-                                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
-                                VerticalAlignment = System.Windows.VerticalAlignment.Center
-                            };
-                            Grid.SetColumn(txt, col);
-                            Grid.SetRow(txt, row);
-                            grid.Children.Add(txt);
-                        }
-                        else
-                        {
-                            var txt = new TextBlock()
-                            {
-                                Margin = new Thickness(5),
-                                TextWrapping = TextWrapping.Wrap,
-                                FontSize = 16,
-                                FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
-                            };
-                            txt.Inlines.Add(new Run($"{sample?.Order}\n") { FontSize = 12 });
-                            txt.Inlines.Add(new Run($"{sample?.Number}\n") { FontWeight = FontWeights.Bold });
-                            txt.Inlines.Add(new Run($"{sample?.BarCode}"));
-
-                            Grid.SetColumn(txt, col);
-                            Grid.SetRow(txt, row);
-                            grid.Children.Add(txt);
-                        }
-                    }
-                }
-            }
-        }
-
+        #region Helper Methods
         private TextBlock CreateTextBlock(string text, int row, int column, int rowSpan = 1, int colSpan = 1)
         {
             var txt = new TextBlock
@@ -415,6 +373,6 @@ namespace WpfApp1
                 }
             }
         }
-
+        #endregion
     }
 }
