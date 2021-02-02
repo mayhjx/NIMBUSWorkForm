@@ -4,6 +4,10 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyName>NIMBUSWorkForm</AssemblyName>
+    <RootNamespace>NIMBUSWorkForm</RootNamespace>
+    <ApplicationIcon>table_green.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
