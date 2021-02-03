@@ -93,34 +93,47 @@ namespace NIMBUSWorkForm
             int clinicSampleCount = 0;
             foreach (var sample in clinicSamples)
             {
-                if (clinicSampleCount == 40 && !hasGroupTowQC)
+                // 插入临床样品
+                row = sh.CreateRow(rowIndex++);
+                if (Settings.Default.ShowBarCode)
                 {
-                    // 第40个样后面插入第一组质控
-                    foreach (var qc in groupOneQCs)
-                    {
-                        row = sh.CreateRow(rowIndex++);
-                        row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
-                        row.CreateCell(1).SetCellValue("1");
-                        row.CreateCell(2).SetCellValue(qc.Order);
-                    }
-                    hasGroupTowQC = true;
+                    row.CreateCell(0).SetCellValue(sample.BarCode.Split('-')[0]);
                 }
                 else
                 {
-                    // 插入临床样品
-                    row = sh.CreateRow(rowIndex++);
-                    if(Settings.Default.ShowBarCode)
-                    {
-                        row.CreateCell(0).SetCellValue(sample.BarCode);
-                    }
-                    else
-                    {
-                        row.CreateCell(0).SetCellValue(sample.Number);
-                    }
-                    row.CreateCell(1).SetCellValue("1");
-                    row.CreateCell(2).SetCellValue(sample.Order);
-                    clinicSampleCount++;
+                    row.CreateCell(0).SetCellValue(sample.Number);
                 }
+                row.CreateCell(1).SetCellValue("1");
+                row.CreateCell(2).SetCellValue(sample.Order);
+                clinicSampleCount++;
+                //if (clinicSampleCount == 40 && !hasGroupTowQC)
+                //{
+                //    // 第40个样后面插入第一组质控
+                //    foreach (var qc in groupOneQCs)
+                //    {
+                //        row = sh.CreateRow(rowIndex++);
+                //        row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
+                //        row.CreateCell(1).SetCellValue("1");
+                //        row.CreateCell(2).SetCellValue(qc.Order);
+                //    }
+                //    hasGroupTowQC = true;
+                //}
+                //else
+                //{
+                //    // 插入临床样品
+                //    row = sh.CreateRow(rowIndex++);
+                //    if(Settings.Default.ShowBarCode)
+                //    {
+                //        row.CreateCell(0).SetCellValue(sample.BarCode);
+                //    }
+                //    else
+                //    {
+                //        row.CreateCell(0).SetCellValue(sample.Number);
+                //    }
+                //    row.CreateCell(1).SetCellValue("1");
+                //    row.CreateCell(2).SetCellValue(sample.Order);
+                //    clinicSampleCount++;
+                //}
             }
 
             // 最后插入第二组质控
