@@ -177,6 +177,10 @@ namespace WpfApp1
                             txt.Inlines.Add(new Run($"{sample?.Number}\n") { FontWeight = FontWeights.Bold });
                             txt.Inlines.Add(new Run($"{sample?.BarCode}"));
 
+                            if(sample.IsWarn())
+                            {
+                                txt.Inlines.Add(new Run("  ⚠"));
+                            }
                             Grid.SetColumn(txt, col);
                             Grid.SetRow(txt, row);
                             grid.Children.Add(txt);
@@ -288,7 +292,7 @@ namespace WpfApp1
             footer.Children.Add(CreateTextBlock("加样枪：FXS-YY", 0, 0));
             footer.Children.Add(CreateTextBlock("手工加样人员：", 0, 1));
             footer.Children.Add(CreateTextBlock("加样情况审核人员：", 0, 2));
-            footer.Children.Add(CreateTextBlock("备注：手写的实验号必须一一核对实验号，条码和孔位。", 0, 3));
+            footer.Children.Add(CreateTextBlock("备注：⚠表示移液有问题；手写实验号必须核对实验号，条码和孔位。", 0, 3));
 
             AddBorder(footer);
 

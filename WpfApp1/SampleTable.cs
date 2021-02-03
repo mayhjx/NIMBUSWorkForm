@@ -55,9 +55,10 @@ namespace NIMBUSWorkForm
         }
 
         public bool IsWarn() => !IsNormal() && IsClinicSample();
-        public bool IsClinicSample()=> !IsSTD() && !IsQC() && !IsBlank(); // 需包括定位孔
+        public bool IsClinicSample()=> !IsSTD() && !IsQC() && !IsBlank() && !IsEmpty(); // 需包括定位孔
         public bool IsNormal() => WarnLevel == "0" || IsX();
 
+        public bool IsEmpty() => string.IsNullOrEmpty(BarCode);
         public bool IsSTD() => Number.StartsWith("STD");
         public bool IsQC() => IsGroupOneQC() || IsGroupTwoQC();
         public bool IsGroupOneQC() => Number.StartsWith("QC") && int.Parse(Order) < 40;
