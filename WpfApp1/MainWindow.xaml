@@ -5,35 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="NIMBUS移液平台工作清单生成" Height="550" Width="1100" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        Title="NIMBUS移液平台工作清单生成" Height="650" Width="1150" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="30" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" MinWidth="100" />
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" MinWidth="100" />
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="170" />
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="7" FontSize="14" VerticalAlignment="Center" Margin="0,0,0,10">
             <MenuItem x:Name="Setting" Header="设置" Click="Setting_Click" />
             <MenuItem x:Name="Help" Header="说明" Click="Help_Click" />
         </Menu>
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="170" />
-                <ColumnDefinition Width="170" />
-                <ColumnDefinition Width="170" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">移液操作清单：</TextBlock>
-            <TextBox x:Name="FileName"  Grid.Row="0" Grid.Column="1" Width="200" Padding="5" IsReadOnly="True"></TextBox>
-            <TextBlock  Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">每日操作清单：</TextBlock>
-            <TextBox x:Name="FileName1" Grid.Row="0" Grid.Column="3" Width="200" Padding="5" IsReadOnly="True"></TextBox>
-            <Button x:Name="OpenFileButton" Grid.Row="0" Grid.Column="4" Width="150" Height="30" Click="OpenFileButton_Click" Content="打开文件"  />
-            <Button x:Name="PrintButton" Grid.Row="0" Grid.Column="5" Width="150" Height="30" Click="PrintButton_Click" Content="打印96孔板工作清单" IsEnabled="False"/>
-            <Button x:Name="OutputButton" Grid.Row="0" Grid.Column="6" Width="150" Height="30" Click="OutputButton_Click" Content="导出上机列表和警告信息" IsEnabled="False"/>
-            <FlowDocumentPageViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7" x:Name="DocumentPage">
-            </FlowDocumentPageViewer>
-        </Grid>
-    </DockPanel>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">移液操作清单：</TextBlock>
+        <TextBox x:Name="FileName"  Grid.Row="1" Grid.Column="1" Width="200" Padding="5" IsReadOnly="True"></TextBox>
+        <TextBlock  Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">每日操作清单：</TextBlock>
+        <TextBox x:Name="FileName1" Grid.Row="1" Grid.Column="3" Width="200" Padding="5" IsReadOnly="True"></TextBox>
+        <Button x:Name="OpenFileButton" Grid.Row="1" Grid.Column="4" Width="150" Height="30" Click="OpenFileButton_Click" Content="打开文件"  />
+        <Button x:Name="PrintButton" Grid.Row="1" Grid.Column="5" Width="150" Height="30" Click="PrintButton_Click" Content="打印96孔板工作清单" IsEnabled="False"/>
+        <Button x:Name="OutputButton" Grid.Row="1" Grid.Column="6" Width="150" Height="30" Click="OutputButton_Click" Content="导出上机列表和警告信息" IsEnabled="False"/>
+        <FlowDocumentPageViewer x:Name="DocumentPage" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7">
+        </FlowDocumentPageViewer>
+    </Grid>
 </Window>
