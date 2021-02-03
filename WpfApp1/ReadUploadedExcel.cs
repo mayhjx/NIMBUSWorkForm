@@ -90,6 +90,7 @@ namespace NIMBUSWorkForm
                     }
                     if (pos == "A1")
                     {
+                        // A1是96孔板的开始孔位
                         p++;
                     }
                     if (STDQC.ContainsKey(pos))
