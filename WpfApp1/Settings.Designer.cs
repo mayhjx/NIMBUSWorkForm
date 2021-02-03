@@ -70,5 +70,17 @@ namespace NIMBUSWorkForm {
                 this["ShowBarCode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowSampleName {
+            get {
+                return ((bool)(this["ShowSampleName"]));
+            }
+            set {
+                this["ShowSampleName"] = value;
+            }
+        }
     }
 }

@@ -377,7 +377,8 @@ namespace WpfApp1
 
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
-            SettingPopup.IsOpen = true;
+            var settingWindow = new Setting();
+            settingWindow.ShowDialog();
         }
 
         private void Help_Click(object sender, RoutedEventArgs e)

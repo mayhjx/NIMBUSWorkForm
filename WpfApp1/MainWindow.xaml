@@ -35,10 +35,5 @@
             <FlowDocumentPageViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7" x:Name="DocumentPage">
             </FlowDocumentPageViewer>
         </Grid>
-        <Popup x:Name="SettingPopup" Height="500" Width="500" Placement="Center" AllowsTransparency="True">
-            <Grid>
-                <TextBlock>Setting</TextBlock>
-            </Grid>
-        </Popup>
     </DockPanel>
 </Window>
