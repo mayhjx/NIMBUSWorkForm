@@ -84,7 +84,7 @@ namespace NIMBUSWorkForm
             foreach (var qc in groupOneQCs)
             {
                 row = sh.CreateRow(rowIndex++);
-                row.CreateCell(0).SetCellValue(qc.Number);
+                row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
                 row.CreateCell(1).SetCellValue("1");
                 row.CreateCell(2).SetCellValue(qc.Order);
             }
@@ -99,7 +99,7 @@ namespace NIMBUSWorkForm
                     foreach (var qc in groupOneQCs)
                     {
                         row = sh.CreateRow(rowIndex++);
-                        row.CreateCell(0).SetCellValue(qc.Number);
+                        row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
                         row.CreateCell(1).SetCellValue("1");
                         row.CreateCell(2).SetCellValue(qc.Order);
                     }
@@ -109,7 +109,14 @@ namespace NIMBUSWorkForm
                 {
                     // 插入临床样品
                     row = sh.CreateRow(rowIndex++);
-                    row.CreateCell(0).SetCellValue(sample.BarCode);
+                    if(Settings.Default.ShowBarCode)
+                    {
+                        row.CreateCell(0).SetCellValue(sample.BarCode);
+                    }
+                    else
+                    {
+                        row.CreateCell(0).SetCellValue(sample.Number);
+                    }
                     row.CreateCell(1).SetCellValue("1");
                     row.CreateCell(2).SetCellValue(sample.Order);
                     clinicSampleCount++;
@@ -120,7 +127,7 @@ namespace NIMBUSWorkForm
             foreach (var qc in groupTwoQCs)
             {
                 row = sh.CreateRow(rowIndex++);
-                row.CreateCell(0).SetCellValue(qc.Number);
+                row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
                 row.CreateCell(1).SetCellValue("1");
                 row.CreateCell(2).SetCellValue(qc.Order);
                 clinicSampleCount++;
@@ -151,6 +158,21 @@ namespace NIMBUSWorkForm
                     row.CreateCell(4).SetCellValue(sample.WarnLevel);
                     row.CreateCell(5).SetCellValue(sample.WarnInfo);
                 }
+            }
+        }
+
+        private static string GetQCStringFromSettings(string qc)
+        {
+            switch (qc)
+            {
+                case "QC1":
+                    return Settings.Default.QC1;
+                case "QC2":
+                    return Settings.Default.QC2;
+                case "QC3":
+                    return Settings.Default.QC3;
+                default:
+                    return "";
             }
         }
     }
