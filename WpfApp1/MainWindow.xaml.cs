@@ -381,10 +381,5 @@ namespace WpfApp1
             var settingWindow = new Setting();
             settingWindow.ShowDialog();
         }
-
-        private void Help_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
