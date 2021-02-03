@@ -89,7 +89,7 @@ namespace NIMBUSWorkForm
                 row.CreateCell(2).SetCellValue(qc.Order);
             }
 
-            bool hasGroupTowQC = false;
+            //bool hasGroupTowQC = false;
             int clinicSampleCount = 0;
             foreach (var sample in clinicSamples)
             {
