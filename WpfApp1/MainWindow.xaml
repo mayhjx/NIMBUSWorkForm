@@ -32,14 +32,14 @@
         <Button x:Name="PrintButton" Grid.Row="1" Grid.Column="5" Width="150" Height="30" Click="PrintButton_Click" Content="打印96孔板工作清单" IsEnabled="False"/>
         <Button x:Name="OutputButton" Grid.Row="1" Grid.Column="6" Width="150" Height="30" Click="OutputButton_Click" Content="导出上机列表和警告信息" IsEnabled="False"/>
         <FlowDocumentPageViewer x:Name="DocumentPage" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="7">
-            <FlowDocument ColumnWidth="1000" >
+            <FlowDocument ColumnWidth="1200" FontFamily="宋体" FontSize="24">
                 <Paragraph>使用说明：</Paragraph>
                 <List>
-                    <ListItem Margin="10">
-                        <Paragraph>单击“打开文件”按钮，出现两次选择文件的对话框，第一次选择NIMBUS移液平台导出的清单，第二次选择新系统导出的每日操作清单；</Paragraph>
+                    <ListItem Margin="20">
+                        <Paragraph>单击“打开文件”按钮，出现两次对话框，第一次选择NIMBUS移液平台导出的清单，第二次选择新系统导出的每日操作清单；</Paragraph>
                     </ListItem>
-                    <ListItem Margin="10">
-                        <Paragraph>在“设置”界面可以设置质控的传输字符串和上机列表中Sample列的内容（条形码或实验号）。</Paragraph>
+                    <ListItem Margin="20">
+                        <Paragraph>在“设置”界面可以设置质控的传输字符串和上机列表中Sample列的内容（条形码/实验号）。</Paragraph>
                     </ListItem>
                 </List>
             </FlowDocument>
