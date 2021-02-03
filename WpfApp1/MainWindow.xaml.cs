@@ -35,6 +35,7 @@ namespace WpfApp1
             this.MinHeight = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
             DocumentPage.Width = RowTitleWidth + CellColWidth * 12 + 50;
             DocumentPage.Height = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
+            this.SizeToContent = SizeToContent.WidthAndHeight;
         }
 
         private void OpenFileButton_Click(object sender, RoutedEventArgs e)
