@@ -38,12 +38,13 @@ namespace NIMBUSWorkForm
         public Sample(string number, string barCode, string plate, string position,string warnLevel, string warnInfo)
         {
             Number = number;
-            // 定位孔的实验号也设为定位孔
+            BarCode = barCode;
+            // 为了在生成上机列表时不管是生成条码还是实验号都显示定位孔
             if (warnLevel.StartsWith('X'))
             {
                 Number = warnLevel;
+                BarCode = warnLevel;
             }
-            BarCode = barCode;
             Plate = plate;
             Position = position;
             string rowIndex = Position[0].ToString();
