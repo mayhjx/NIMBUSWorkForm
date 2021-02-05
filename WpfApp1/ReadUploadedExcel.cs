@@ -2,11 +2,13 @@
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using System.Text;
 using System.Windows;
+using System.Text.RegularExpressions;
 
 namespace NIMBUSWorkForm
 {
@@ -126,6 +128,8 @@ namespace NIMBUSWorkForm
                 int numCol = worksheet.GetRow(0).Cells.FirstOrDefault(i => i.ToString() == "实验号").ColumnIndex;
                 // TODO can not find the column
 
+                var targetPreFix = Settings.Default.TargetPreFix;
+
                 for (int i = 1; i <= worksheet.LastRowNum; i++)
                 {
                     var row = worksheet.GetRow(i);
@@ -134,11 +138,14 @@ namespace NIMBUSWorkForm
                     string barCode = row.GetCell(bcCol).ToString();
                     string number = row.GetCell(numCol).ToString();
 
-                    // 每日操作清单中的条码不包含“-”
-                    var sample = sampleTable.Samples.Find(i => i.BarCode.Split('-')[0] == barCode);
-                    if (sample != null)
+                    if (IsTargetSampleName(targetPreFix, number))
                     {
-                        sample.Number = number;
+                        // 每日操作清单中的条码不包含“-”
+                        var sample = sampleTable.Samples.Find(i => i.BarCode.Split('-')[0] == barCode);
+                        if (sample != null)
+                        {
+                            sample.Number = number;
+                        }
                     }
                 }
             }
@@ -149,6 +156,23 @@ namespace NIMBUSWorkForm
             return sampleTable;
         }
 
+        public static bool IsTargetSampleName(StringCollection targetPreFix, string name)
+        {
+            foreach (var pre in targetPreFix)
+            {
+                if (GetStringPart(name) == pre)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static string GetStringPart(string name)
+        {
+            var regex = new Regex("^[A-Za-z]+");
+            return regex.Match(name).Value;
+        }
 
         private static IWorkbook ReadExecl(string filePath)
         {
@@ -176,7 +200,7 @@ namespace NIMBUSWorkForm
             }
             catch
             {
-                throw;
+                //throw;
             }
             return workbook;
         }
