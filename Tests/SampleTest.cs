@@ -145,21 +145,6 @@ namespace Tests
         }
 
         [Fact]
-        public void SampleIsEmpty_IsClinicSample_ShouldBeFalse()
-        {
-            var number = "";
-            var barCode = "";
-            var plate = "X1";
-            var position = "A2";
-            var warnLevel = "2";
-            var warnInfo = "Not Used";
-
-            var sample = new Sample(number, barCode, plate, position, warnLevel, warnInfo);
-
-            Assert.False(sample.IsClinicSample());
-        }
-
-        [Fact]
         public void Sample_IsClinicSample_ShouldBeTrue()
         {
             var number = "A001";
@@ -205,7 +190,22 @@ namespace Tests
         }
 
         [Fact]
-        public void SampleNotIsClinicSample_ButNotNormal_IsWarn_ShouldBeTrue()
+        public void SampleIsEmpty_IsWarn_ShouldBeFalse()
+        {
+            var number = "";
+            var barCode = "";
+            var plate = "X1";
+            var position = "A1";
+            var warnLevel = "2";
+            var warnInfo = "Not Used";
+
+            var sample = new Sample(number, barCode, plate, position, warnLevel, warnInfo);
+
+            Assert.False(sample.IsWarn());
+        }
+
+        [Fact]
+        public void SampleIsClinicSample_ButUnnormal_IsWarn_ShouldBeTrue()
         {
             var number = "A001";
             var barCode = "12345678";
