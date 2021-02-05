@@ -152,22 +152,21 @@ namespace NIMBUSWorkForm
             int rowIndex = 0;
             var row = sh.CreateRow(rowIndex++);
             row.CreateCell(0).SetCellValue("实验号");
-            row.CreateCell(1).SetCellValue("板号");
-            row.CreateCell(2).SetCellValue("孔位");
-            row.CreateCell(3).SetCellValue("条码");
+            row.CreateCell(1).SetCellValue("条码");
+            row.CreateCell(2).SetCellValue("板号");
+            row.CreateCell(3).SetCellValue("孔位");
             row.CreateCell(4).SetCellValue("警告级别");
             row.CreateCell(5).SetCellValue("警告信息");
 
             foreach (var sample in sampleTable.Samples)
             {
-                // 0：打液正常，X?：定位孔
                 if (sample.IsWarn())
                 {
                     row = sh.CreateRow(rowIndex++);
                     row.CreateCell(0).SetCellValue(sample.Number);
-                    row.CreateCell(1).SetCellValue(sample.Plate);
-                    row.CreateCell(2).SetCellValue(sample.Position);
-                    row.CreateCell(3).SetCellValue(sample.BarCode);
+                    row.CreateCell(1).SetCellValue(sample.BarCode);
+                    row.CreateCell(2).SetCellValue(sample.Plate);
+                    row.CreateCell(3).SetCellValue(sample.Position);
                     row.CreateCell(4).SetCellValue(sample.WarnLevel);
                     row.CreateCell(5).SetCellValue(sample.WarnInfo);
                 }
