@@ -28,13 +28,13 @@
         <TextBlock Text="项目名称：" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <TextBox x:Name="Item" Grid.Row="1" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=ItemName, Mode=TwoWay}" Padding="5" />
 
-        <TextBlock Text="QC1传输字符串：" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="QC1联机代码：" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <TextBox x:Name="QC1String" Grid.Row="2" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC1, Mode=TwoWay}" Padding="5" />
         
-        <TextBlock Text="QC2传输字符串：" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="QC2联机代码：" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <TextBox x:Name="QC2String" Grid.Row="3" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC2, Mode=TwoWay}" Padding="5" />
         
-        <TextBlock Text="QC3传输字符串：" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBlock Text="QC3联机代码：" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <TextBox x:Name="QC3String" Grid.Row="4" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC3, Mode=TwoWay}" Padding="5" />
 
         <TextBlock Text="生成的上机列表中Sample列为" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" />

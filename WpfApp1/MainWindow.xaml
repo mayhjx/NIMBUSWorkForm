@@ -39,7 +39,7 @@
                         <Paragraph>单击“打开文件”按钮，出现两次对话框，第一次选择NIMBUS移液平台导出的清单，第二次选择新系统导出的每日操作清单；</Paragraph>
                     </ListItem>
                     <ListItem Margin="20">
-                        <Paragraph>在“设置”界面可以设置质控的传输字符串和上机列表中Sample列的内容（条形码/实验号）。</Paragraph>
+                        <Paragraph>在“设置”界面可以设置表号、项目名称（在表格标题显示），质控联机代码（在上机列表显示）和目标实验号模板（前缀）。</Paragraph>
                     </ListItem>
                 </List>
             </FlowDocument>
