@@ -30,7 +30,7 @@
         <TextBlock Text="上机列表中Sample列为" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" />
         <StackPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
             <RadioButton x:Name="ShowBarCode" Content="条形码" IsChecked="{Binding Source={x:Static local:Settings.Default}, Path=ShowBarCode, Mode=TwoWay}" Margin="0,0,20,0"/>
-            <RadioButton x:Name="ShowSampleName" Content="实验号" IsChecked="{Binding Source={x:Static local:Settings.Default}, Path=ShowSampleName, Mode=TwoWay}" />
+            <RadioButton x:Name="ShowSampleName" Content="实验号" IsChecked="{Binding Source={x:Static local:Settings.Default}, Path=ShowSampleName, Mode=TwoWay}" IsEnabled="False" />
         </StackPanel>
         
         <StackPanel Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
