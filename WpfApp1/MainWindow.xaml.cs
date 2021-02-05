@@ -31,8 +31,6 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            this.MinWidth = RowTitleWidth + CellColWidth * 12 + 50;
-            this.MinHeight = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
             DocumentPage.Width = RowTitleWidth + CellColWidth * 12 + 50;
             DocumentPage.Height = ColumnTitleHeight + CellRowHeight * 8 + RowHeight * 3 + 70;
             this.SizeToContent = SizeToContent.WidthAndHeight;
@@ -243,13 +241,17 @@ namespace WpfApp1
         private Grid Header()
         {
             var header = CreateGrid();
+            var tableNumber = Settings.Default.TableNumber;
+            var item = Settings.Default.ItemName;
 
             header.RowDefinitions.Add(CreateRow(RowHeight));
             header.ColumnDefinitions.Add(CreateColumn(RowTitleWidth + CellColWidth * 12));
 
-            var txt = CreateTextBlock("____前处理样品工作单（Testing Worksheet）", 0, 0, 1, 5);
+
+            var txt = CreateTextBlock($"{item}前处理样品工作单（Testing Worksheet）\t\t\t\t\t{tableNumber}\t", 0, 0, 1, 5);
+
             txt.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            txt.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            txt.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
             header.Children.Add(txt);
 
             AddBorder(header);
