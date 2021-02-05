@@ -97,7 +97,7 @@ namespace NIMBUSWorkForm
                 row = sh.CreateRow(rowIndex++);
                 if (Settings.Default.ShowBarCode)
                 {
-                    row.CreateCell(0).SetCellValue(sample.BarCode.Split('-')[0]);
+                    row.CreateCell(0).SetCellValue(sample.BarCode);
                 }
                 else
                 {
