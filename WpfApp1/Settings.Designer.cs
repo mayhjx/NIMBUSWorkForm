@@ -82,5 +82,42 @@ namespace NIMBUSWorkForm {
                 this["ShowSampleName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" />")]
+        public global::System.Collections.Specialized.StringCollection TargetPreFix {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["TargetPreFix"]));
+            }
+            set {
+                this["TargetPreFix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("KM-SOP0314")]
+        public string TableNumber {
+            get {
+                return ((string)(this["TableNumber"]));
+            }
+            set {
+                this["TableNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ItemName {
+            get {
+                return ((string)(this["ItemName"]));
+            }
+            set {
+                this["ItemName"] = value;
+            }
+        }
     }
 }

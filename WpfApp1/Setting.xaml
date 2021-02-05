@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NIMBUSWorkForm"
         mc:Ignorable="d"
-        Title="设置" Height="220" Width="330" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+        Title="设置" Height="400" Width="330" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition />
@@ -13,27 +13,54 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="2*"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Text="QC1传输字符串：" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBox x:Name="QC1String" Grid.Row="0" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC1, Mode=TwoWay}" Padding="5" />
         
-        <TextBlock Text="QC2传输字符串：" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBox x:Name="QC2String" Grid.Row="1" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC2, Mode=TwoWay}" Padding="5" />
+        <TextBlock Text="表号：" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBox x:Name="TableNumber" Grid.Row="0" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=TableNumber, Mode=TwoWay}" Padding="5" />
+
+        <TextBlock Text="项目名称：" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBox x:Name="Item" Grid.Row="1" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=ItemName, Mode=TwoWay}" Padding="5" />
+
+        <TextBlock Text="QC1传输字符串：" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBox x:Name="QC1String" Grid.Row="2" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC1, Mode=TwoWay}" Padding="5" />
         
-        <TextBlock Text="QC3传输字符串：" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
-        <TextBox x:Name="QC3String" Grid.Row="2" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC3, Mode=TwoWay}" Padding="5" />
+        <TextBlock Text="QC2传输字符串：" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBox x:Name="QC2String" Grid.Row="3" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC2, Mode=TwoWay}" Padding="5" />
         
-        <TextBlock Text="上机列表中Sample列为" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" />
-        <StackPanel Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-            <RadioButton x:Name="ShowBarCode" Content="条形码" IsChecked="{Binding Source={x:Static local:Settings.Default}, Path=ShowBarCode, Mode=TwoWay}" Margin="0,0,20,0"/>
+        <TextBlock Text="QC3传输字符串：" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <TextBox x:Name="QC3String" Grid.Row="4" Grid.Column="1" Height="30" Text="{Binding Source={x:Static local:Settings.Default}, Path=QC3, Mode=TwoWay}" Padding="5" />
+
+        <TextBlock Text="生成的上机列表中Sample列为" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" />
+        <StackPanel Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+            <RadioButton x:Name="ShowBarCode" Content="条形码" IsChecked="{Binding Source={x:Static local:Settings.Default}, Path=ShowBarCode, Mode=TwoWay}" Margin="0,0,25,0"/>
             <RadioButton x:Name="ShowSampleName" Content="实验号" IsChecked="{Binding Source={x:Static local:Settings.Default}, Path=ShowSampleName, Mode=TwoWay}" IsEnabled="False" />
         </StackPanel>
-        
-        <StackPanel Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+
+        <TextBlock Text="在每日操作清单中识别实验号前缀为" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" />
+        <Grid Grid.Row="6" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            <TextBox Name="SelectedItem" Grid.Row="0" Grid.Column="0" />
+            <Button Name="AddBtn" Grid.Row="0" Grid.Column="1" Content="增加" Click="AddBtn_Click"/>
+            <Button Name="DeleteBtn" Grid.Row="0" Grid.Column="2" Content="删除" Click="DeleteBtn_Click" />
+            <ListView Name="TargetPreFixList" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" SelectionChanged="TargetPreFixList_SelectionChanged" />
+        </Grid>
+
+        <StackPanel Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
             <Button x:Name="Save" Click="Save_Click" Content="保存" IsDefault="True" Width="60" Height="25" />
             <Button x:Name="Cancel" Content="取消" IsCancel="True" Width="60" Height="25" Margin="25,0,0,0"/>
         </StackPanel>
