@@ -97,6 +97,7 @@ namespace NIMBUSWorkForm
                     }
                     if (STDQC.ContainsKey(pos))
                     {
+                        // 生成曲线质控的实验号
                         num = STDQC.GetValueOrDefault(pos);
                     }
 
@@ -138,14 +139,17 @@ namespace NIMBUSWorkForm
                     string barCode = row.GetCell(bcCol).ToString();
                     string number = row.GetCell(numCol).ToString();
 
-                    if (IsTargetSampleName(targetPreFix, number))
+                    // 每日操作清单中的条码不包含“-”
+                    var sample = sampleTable.Samples.Find(i => i.BarCode.Split('-')[0] == barCode);
+                    if (sample != null)
                     {
-                        // 每日操作清单中的条码不包含“-”
-                        var sample = sampleTable.Samples.Find(i => i.BarCode.Split('-')[0] == barCode);
-                        if (sample != null)
+                        // 将Number设为符合目标实验号模板的实验号
+                        // 如果一个条码对应多个实验号，放进Numbers中，后面生成96孔板表格时提示
+                        if (IsTargetSampleName(targetPreFix, number))
                         {
-                            sample.Number = number;
+                            sample.SetTargetNumber(number);
                         }
+                        sample.UpdateNumbers(number);
                     }
                 }
             }

@@ -35,9 +35,10 @@ namespace NIMBUSWorkForm
     {
         private readonly List<string> Rows = new List<string> { "A", "B", "C", "D", "E", "F", "G", "H" };
 
-        public Sample(string number, string barCode, string plate, string position,string warnLevel, string warnInfo)
+        public Sample(string number, string barCode, string plate, string position, string warnLevel, string warnInfo)
         {
             Number = number;
+            UpdateNumbers(number);
             BarCode = barCode;
             // 为了在生成上机列表时不管是生成条码还是实验号都显示定位孔
             if (warnLevel.StartsWith('X'))
@@ -55,7 +56,7 @@ namespace NIMBUSWorkForm
         }
 
         public bool IsWarn() => !IsNormal() && IsClinicSample() && !IsEmpty();
-        public bool IsClinicSample()=> !IsSTD() && !IsQC() && !IsBlank(); // 需包括定位孔
+        public bool IsClinicSample() => !IsSTD() && !IsQC() && !IsBlank(); // 需包括定位孔
         public bool IsNormal() => WarnLevel == "0" || IsX();
 
         public bool IsEmpty() => string.IsNullOrEmpty(BarCode);
@@ -68,6 +69,21 @@ namespace NIMBUSWorkForm
 
         public bool InPlate(string plate) => Plate == plate;
 
+        public void SetTargetNumber(string number)
+        {
+            Number = number;
+        }
+
+        public void UpdateNumbers(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                Numbers.Add(name);
+            }
+        }
+        public bool HasMultiNumber() => Numbers.Count > 1;
+
+        public List<string> Numbers { get; set; } = new List<string>();
         public string Number { get; set; } //实验号
         public string BarCode { get; set; } // 条形码
         public string Plate { get; set; } // 板号

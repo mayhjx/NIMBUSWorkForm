@@ -171,14 +171,21 @@ namespace WpfApp1
                                 FontSize = 16,
                                 FontFamily = new System.Windows.Media.FontFamily(CustomFontFamily),
                             };
-                            txt.Inlines.Add(new Run($"{sample?.Order}\n") { FontSize = 12 });
-                            txt.Inlines.Add(new Run($"{sample?.Number}\n") { FontWeight = FontWeights.Bold });
-                            txt.Inlines.Add(new Run($"{sample?.BarCode}"));
+                            txt.Inlines.Add(new Run($"{sample?.Order}") { FontSize = 12 });
 
-                            if(sample.IsWarn())
+                            if (sample.IsWarn())
                             {
-                                txt.Inlines.Add(new Run("  ⚠"));
+                                txt.Inlines.Add(new Run(" 🏴") { FontSize = 12 });
                             }
+
+                            if (sample.HasMultiNumber())
+                            {
+                                txt.Inlines.Add(new Run(" 👥") { FontSize = 12 });
+                            }
+
+                            txt.Inlines.Add(new Run($"\n{sample?.Number}") { FontWeight = FontWeights.Bold });
+                            txt.Inlines.Add(new Run($"\n{sample?.BarCode}"));
+
                             Grid.SetColumn(txt, col);
                             Grid.SetRow(txt, row);
                             grid.Children.Add(txt);
@@ -294,7 +301,7 @@ namespace WpfApp1
             footer.Children.Add(CreateTextBlock("加样枪：FXS-YY", 0, 0));
             footer.Children.Add(CreateTextBlock("手工加样人员：", 0, 1));
             footer.Children.Add(CreateTextBlock("加样情况审核人员：", 0, 2));
-            footer.Children.Add(CreateTextBlock("备注：⚠表示移液有问题；手写实验号必须核对实验号，条码和孔位。", 0, 3));
+            footer.Children.Add(CreateTextBlock("备注：🏴表示移液有问题；👥表示该条码有多个实验号。", 0, 3));
 
             AddBorder(footer);
 

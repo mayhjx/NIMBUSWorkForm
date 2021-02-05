@@ -218,5 +218,40 @@ namespace Tests
 
             Assert.True(sample.IsWarn());
         }
+
+        [Fact]
+        public void Sample_HasMultiNumber_ShouldBeTrue()
+        {
+            var number = "";
+            var barCode = "12345678";
+            var plate = "X1";
+            var position = "C1";
+            var warnLevel = "4";
+            var warnInfo = "Pipetting Warn";
+
+            var sample = new Sample(number, barCode, plate, position, warnLevel, warnInfo);
+            
+            sample.UpdateNumbers("A001");
+            sample.UpdateNumbers("B001");
+
+            Assert.True(sample.HasMultiNumber());
+        }
+
+        [Fact]
+        public void Sample_SingleNumber_ShouldBeFalse()
+        {
+            var number = "";
+            var barCode = "12345678";
+            var plate = "X1";
+            var position = "C1";
+            var warnLevel = "4";
+            var warnInfo = "Pipetting Warn";
+
+            var sample = new Sample(number, barCode, plate, position, warnLevel, warnInfo);
+            sample.UpdateNumbers("A001");
+
+            Assert.False(sample.HasMultiNumber());
+        }
+
     }
 }
