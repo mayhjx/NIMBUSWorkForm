@@ -33,118 +33,73 @@ namespace NIMBUSWorkForm
 
         private static void AddBatch(SampleTable sampleTable, string plate, ISheet sh)
         {
-            var clinicSamples = sampleTable.GetClinicSamplesByPlateNumber(plate);
             int rowIndex = 0;
-            var row = sh.CreateRow(rowIndex++);
 
-            row.CreateCell(0).SetCellValue("Sample");
-            row.CreateCell(1).SetCellValue("Plate");
-            row.CreateCell(2).SetCellValue("Vial");
-
+            // 标题
+            SetBatchCell(sh.CreateRow(rowIndex++), "Sample", "Vial", "Plate");
             // 插入两个Blank和三个Test
-            row = sh.CreateRow(rowIndex++);
-            row.CreateCell(0).SetCellValue("Blank-1");
-            row.CreateCell(1).SetCellValue("1");
-            row.CreateCell(2).SetCellValue("20010");
-
-            row = sh.CreateRow(rowIndex++);
-            row.CreateCell(0).SetCellValue("Test-1");
-            row.CreateCell(1).SetCellValue("1");
-            row.CreateCell(2).SetCellValue("20009");
-
-            row = sh.CreateRow(rowIndex++);
-            row.CreateCell(0).SetCellValue("Test-2");
-            row.CreateCell(1).SetCellValue("1");
-            row.CreateCell(2).SetCellValue("20009");
-
-            row = sh.CreateRow(rowIndex++);
-            row.CreateCell(0).SetCellValue("Test-3");
-            row.CreateCell(1).SetCellValue("1");
-            row.CreateCell(2).SetCellValue("20009");
-
-            row = sh.CreateRow(rowIndex++);
-            row.CreateCell(0).SetCellValue("Blank-2");
-            row.CreateCell(1).SetCellValue("1");
-            row.CreateCell(2).SetCellValue("20010");
+            SetBatchCell(sh.CreateRow(rowIndex++), "Blank-1", "20010");
+            SetBatchCell(sh.CreateRow(rowIndex++), "Test-1", "20009");
+            SetBatchCell(sh.CreateRow(rowIndex++), "Test-2", "20009");
+            SetBatchCell(sh.CreateRow(rowIndex++), "Test-3", "20009");
+            SetBatchCell(sh.CreateRow(rowIndex++), "Blank-2", "20010");
+            SetBatchCell(sh.CreateRow(rowIndex++), "KB" + plate[1..], "1");
 
             // 插入曲线
             var std = sampleTable.GetSTDByPlateNumber(plate);
             foreach (var sample in std)
             {
-                row = sh.CreateRow(rowIndex++);
-                row.CreateCell(0).SetCellValue(sample.Number);
-                row.CreateCell(1).SetCellValue("1");
-                row.CreateCell(2).SetCellValue(sample.Order);
+                SetBatchCell(sh.CreateRow(rowIndex++), sample.Number, sample.Order);
             }
 
-            var groupOneQCs = sampleTable.GetGroupOneQCByPlateNumber(plate);
-            var groupTwoQCs = sampleTable.GetGroupTwoQCByPlateNumber(plate);
+            SetBatchCell(sh.CreateRow(rowIndex++), "Blank-3", "20010");
 
-            // 前面插入第一组质控
+            // 插入第一组质控
+            var groupOneQCs = sampleTable.GetGroupOneQCByPlateNumber(plate);
             foreach (var qc in groupOneQCs)
             {
-                row = sh.CreateRow(rowIndex++);
-                row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
-                row.CreateCell(1).SetCellValue("1");
-                row.CreateCell(2).SetCellValue(qc.Order);
+                SetBatchCell(sh.CreateRow(rowIndex++), GetQCStringFromSettings(qc.Number), qc.Order);
             }
 
-            //bool hasGroupTowQC = false;
-            int clinicSampleCount = 0;
+            SetBatchCell(sh.CreateRow(rowIndex++), "Blank-4", "20010");
+
+            // 插入临床样品
+            var clinicSamples = sampleTable.GetClinicSamplesByPlateNumber(plate);
             foreach (var sample in clinicSamples)
             {
-                // 插入临床样品
-                row = sh.CreateRow(rowIndex++);
                 if (Settings.Default.ShowBarCode)
                 {
-                    row.CreateCell(0).SetCellValue(sample.BarCode);
+                    SetBatchCell(sh.CreateRow(rowIndex++), sample.BarCode, sample.Order);
                 }
                 else
                 {
-                    row.CreateCell(0).SetCellValue(sample.Number);
+                    SetBatchCell(sh.CreateRow(rowIndex++), sample.Number, sample.Order);
                 }
-                row.CreateCell(1).SetCellValue("1");
-                row.CreateCell(2).SetCellValue(sample.Order);
-                clinicSampleCount++;
-                //if (clinicSampleCount == 40 && !hasGroupTowQC)
-                //{
-                //    // 第40个样后面插入第一组质控
-                //    foreach (var qc in groupOneQCs)
-                //    {
-                //        row = sh.CreateRow(rowIndex++);
-                //        row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
-                //        row.CreateCell(1).SetCellValue("1");
-                //        row.CreateCell(2).SetCellValue(qc.Order);
-                //    }
-                //    hasGroupTowQC = true;
-                //}
-                //else
-                //{
-                //    // 插入临床样品
-                //    row = sh.CreateRow(rowIndex++);
-                //    if(Settings.Default.ShowBarCode)
-                //    {
-                //        row.CreateCell(0).SetCellValue(sample.BarCode);
-                //    }
-                //    else
-                //    {
-                //        row.CreateCell(0).SetCellValue(sample.Number);
-                //    }
-                //    row.CreateCell(1).SetCellValue("1");
-                //    row.CreateCell(2).SetCellValue(sample.Order);
-                //    clinicSampleCount++;
-                //}
+
+                // 第90孔后面插入一个blank
+                if (sample.Order == "90")
+                {
+                    SetBatchCell(sh.CreateRow(rowIndex++), "Blank-5", "20010");
+                }
             }
 
-            // 最后插入第二组质控
+            SetBatchCell(sh.CreateRow(rowIndex++), "Blank-6", "20010");
+
+            // 插入第二组质控
+            var groupTwoQCs = sampleTable.GetGroupTwoQCByPlateNumber(plate);
             foreach (var qc in groupTwoQCs)
             {
-                row = sh.CreateRow(rowIndex++);
-                row.CreateCell(0).SetCellValue(GetQCStringFromSettings(qc.Number));
-                row.CreateCell(1).SetCellValue("1");
-                row.CreateCell(2).SetCellValue(qc.Order);
-                clinicSampleCount++;
+                SetBatchCell(sh.CreateRow(rowIndex++), GetQCStringFromSettings(qc.Number), qc.Order);
             }
+
+            SetBatchCell(sh.CreateRow(rowIndex++), "Blank-7", "20010");
+        }
+
+        private static void SetBatchCell(IRow row, string name, string order, string plate = "1")
+        {
+            row.CreateCell(0).SetCellValue(name);
+            row.CreateCell(1).SetCellValue(plate);
+            row.CreateCell(2).SetCellValue(order);
         }
 
         private static void AddWarnInfoData(SampleTable sampleTable, ISheet sh)
@@ -184,7 +139,7 @@ namespace NIMBUSWorkForm
                 case "QC3":
                     return Settings.Default.QC3;
                 default:
-                    return "";
+                    return qc;
             }
         }
     }
