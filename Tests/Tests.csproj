@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WpfApp1\WpfApp1.csproj" />
+    <ProjectReference Include="..\WpfApp1\NIMBUSWorkForm.csproj" />
   </ItemGroup>
 
 </Project>
