@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NIMBUSWorkForm", "WpfApp1\NIMBUSWorkForm.csproj", "{96A735A7-49B6-45E4-8B25-A9C8F0B4A4F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NIMBUSWorkForm", "NIMBUSWorkForm\NIMBUSWorkForm.csproj", "{96A735A7-49B6-45E4-8B25-A9C8F0B4A4F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{485EB115-4BA8-42FA-8D68-DB32AE54C52F}"
 EndProject
